@@ -1,3 +1,4 @@
+-- config/keymaps.lua
 local set = vim.keymap.set
 
 -- Keep previous clipboard if pasting in visual
@@ -38,3 +39,11 @@ set("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix list" })
 -- Execute lua code under cursor
 set("n", "<leader>vx", ":.lua<cr>", { desc = "Execute lua code" })
 set("x", "<leader>vx", ":lua<cr>", { desc = "Execute lua code" })
+
+-- Obsidian
+set("n", "<leader>np", ":PromptNew<CR>", { desc = "New Prompt" })
+
+set("n", "<leader>nf", ":ObsidianQuickSwitch path:prompts<CR>", { desc = "Find Prompts" })
+
+-- Поиск по всем заметкам
+set("n", "<leader>no", ":ObsidianSearch<CR>", { desc = "Search All Notes" })

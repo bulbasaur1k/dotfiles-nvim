@@ -1,3 +1,4 @@
+-- plugins/catppuccin.lua
 return {
   {
     "catppuccin/nvim",

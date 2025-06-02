@@ -1,3 +1,4 @@
+-- config/autocmds.lua
 local function augroup(name) return vim.api.nvim_create_augroup("custom_" .. name, { clear = true }) end
 
 -- Check if we need to reload the file when it changed
@@ -54,11 +55,12 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- wrap and check for spell in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("wrap_spell"),
+  group = augroup("text_wrap_spell"), -- или как вы ее назвали
   pattern = { "gitcommit", "markdown" },
   callback = function()
     vim.opt_local.wrap = true
-    vim.opt_local.spell = true
+    vim.opt_local.spell = true -- Убедитесь, что эта строка тоже есть
+    vim.opt_local.spelllang = "en,ru" -- ЭТА СТРОКА КРИТИЧНА
   end,
 })
 
@@ -73,4 +75,10 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   desc = "Disable diagnostic for .env files",
   pattern = ".env",
   callback = function(ev) vim.diagnostic.enable(false, { bufnr = ev.buf }) end,
+})
+-- Для Conform: отключите прямое сохранение при форматировании
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function(args)
+    require("conform").format({ bufnr = args.buf, async = true })
+  end,
 })

@@ -1,64 +1,61 @@
+-- plugins/conform.lua
 return {
   {
     "stevearc/conform.nvim",
     dependencies = { "folke/snacks.nvim" },
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
-    ---@module 'conform'
-    ---@type conform.setupOpts
     opts = {
-      format_on_save = function(bufnr)
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-          return
-        end
-        return { timeout_ms = 1000, lsp_fallback = true }
-      end,
+      -- Убрано format_on_save - будем использовать autocmd
       formatters = {
-        pint = { command = "./vendor/bin/pint" },
+        pint = {
+          command = vim.fn.stdpath("data") .. "/mason/bin/php-cs-fixer",
+          args = { "fix", "--using-cache=no", "--quiet", "$FILENAME" },
+          -- Добавляем проверку существования бинарника
+          condition = function(ctx)
+            return vim.fn.executable(ctx.command) == 1
+          end
+        },
       },
       formatters_by_ft = {
-        ["css"] = { "prettierd" },
-        ["graphql"] = { "prettierd" },
-        ["html"] = { "prettierd" },
-        ["javascript"] = { "prettierd" },
-        ["javascriptreact"] = { "prettierd" },
-        ["json"] = { "prettierd" },
-        ["jsonc"] = { "prettierd" },
-        ["less"] = { "prettierd" },
-        ["lua"] = { "stylua" },
-        ["markdown"] = { "prettierd" },
-        ["markdown.mdx"] = { "prettierd" },
-        ["php"] = { "pint" },
-        ["nix"] = { "alejandra" },
-        ["scss"] = { "prettierd" },
-        ["sh"] = { "shfmt" },
-        ["svg"] = { "xmlformat" },
-        ["typescript"] = { "prettierd" },
-        ["typescriptreact"] = { "prettierd" },
-        ["vue"] = { "prettierd" },
-        ["xml"] = { "xmlformat" },
-        ["yaml"] = { "prettierd" },
+        lua = { "stylua" },
+        python = { "ruff_format" },
+        rust = { "rustfmt" },
+        toml = { "taplo" },
+        javascript = { "biome" },
+        javascriptreact = { "biome" },
+        typescript = { "biome" },
+        typescriptreact = { "biome" },
+        json = { "biome" },
+        css = { "prettierd" },
+        html = { "prettierd" },
+        markdown = { "prettierd" },
+        php = { "pint" },
+        nix = { "alejandra" },
+        sh = { "shfmt" },
+        yaml = { "biome" },
+        yml = { "biome" },
       },
     },
     config = function(_, opts)
       require("conform").setup(opts)
 
-      vim.opt.formatexpr = "v:lua.require'conform'.formatexpr()"
+      -- Убрано vim.opt.formatexpr - может конфликтовать
 
-      Snacks.toggle
-        .new({
-          name = "formatting",
-          get = function() return not vim.b.disable_autoformat end,
-          set = function(state) vim.b.disable_autoformat = not state end,
-        })
-        :map("<leader>tf")
+      -- Инициализация Snacks
+      local snacks = require("snacks")
+      snacks.toggle
+          .new({
+            name = "formatting",
+            get = function() return not vim.b.disable_autoformat end,
+            set = function(state) vim.b.disable_autoformat = not state end,
+          })
+          :map("<leader>tf")
+
+      -- Ручное форматирование
+      vim.keymap.set({ "n", "v" }, "<leader>cf", function()
+        require("conform").format({ async = true, lsp_fallback = true })
+      end, { desc = "Format buffer" })
     end,
-    keys = {
-      {
-        "<leader>cf",
-        function() require("conform").format() end,
-        desc = "Format buffer",
-      },
-    },
   },
 }

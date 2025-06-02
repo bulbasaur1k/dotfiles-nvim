@@ -1,3 +1,4 @@
+-- config/options.lua
 local opt = vim.opt
 
 vim.g.mapleader = " "
@@ -13,6 +14,12 @@ opt.cmdheight = 0
 opt.cursorline = true -- Enable highlighting of the current line
 opt.expandtab = true -- Use spaces instead of tabs
 opt.fileencoding = "utf-8"
+opt.fileencodings = "ucs-bom,utf-8,default,latin1" -- Попытаться прочитать в этих кодировках, в данном порядке
+
+-- *** УДАЛИТЕ ИЛИ ЗАКОММЕНТИРУЙТЕ ЭТИ ДВЕ СТРОКИ ***
+-- vim.opt.backup = false      -- не создавать файлы filename~
+-- vim.opt.writebackup = false -- не создавать временные копии при записи
+
 opt.foldenable = true
 opt.foldexpr = "v:lua.require('util.ui').foldexpr()"
 opt.foldlevel = 99
@@ -47,11 +54,11 @@ opt.spelllang = "en"
 opt.splitbelow = true -- Put new windows below current
 opt.splitkeep = "screen"
 opt.splitright = true -- Put new windows right of current
-opt.swapfile = false
+opt.swapfile = false -- Вы, вероятно, хотите оставить swapfile = false, так как он может засорять директории, и undo-файлы (undofile = true) обычно достаточны для восстановления.
 opt.tabstop = 2 -- Number of spaces tabs count for
 opt.termguicolors = true -- True color support
 opt.timeoutlen = 300
-opt.undofile = true
+opt.undofile = true -- Включено постоянное undo (сохраняется в undodir)
 opt.undolevels = 10000
 opt.updatetime = 200 -- Save swap file and trigger CursorHold
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode

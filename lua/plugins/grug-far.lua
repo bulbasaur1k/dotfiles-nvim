@@ -1,3 +1,4 @@
+-- plugins/grug-far.lua
 return {
   {
     "MagicDuck/grug-far.nvim",

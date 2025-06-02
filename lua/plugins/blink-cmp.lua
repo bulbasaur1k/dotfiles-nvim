@@ -1,3 +1,4 @@
+-- plugins/blink.lua
 return {
   {
     "saghen/blink.cmp",
@@ -8,8 +9,6 @@ return {
     },
     version = "v1.*",
     event = { "CmdlineEnter", "InsertEnter" },
-    ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
     opts = {
       cmdline = {
         keymap = {
@@ -33,7 +32,7 @@ return {
           lazydev = {
             name = "LazyDev",
             module = "lazydev.integrations.blink",
-            score_offset = 100, -- show at a higher priority than lsp
+            score_offset = 100,
           },
         },
       },
@@ -45,7 +44,7 @@ return {
           auto_show = function(ctx) return ctx.mode ~= "cmdline" end,
           draw = {
             columns = {
-              { "label", "label_description", gap = 1 },
+              { "label",     "label_description", gap = 1 },
               { "kind_icon", "kind" },
             },
             components = {
