@@ -7,14 +7,14 @@ return {
       ensure_installed = {
         "phpactor",
         "pyright",
-        "tsserver",
+        "ts_ls",
         "biome", -- Замена eslint
         "marksman",
         "dockerls",
         "ansiblels",
         "rust_analyzer",
         "lua_ls",
-         "yamlls",
+        "yamlls",
         "helm-ls",
       },
       automatic_installation = true,

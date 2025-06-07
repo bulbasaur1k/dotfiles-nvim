@@ -10,6 +10,7 @@ return {
 					-- форматтеры
 					nls.builtins.formatting.prettier,
 					nls.builtins.formatting.black,
+          nls.builtins.formatting.biome,
 					-- диагностика
 					nls.builtins.diagnostics.shellcheck,
 					-- PHP CS Fixer (уже через Mason-bin)

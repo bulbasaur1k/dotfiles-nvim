@@ -15,7 +15,7 @@ return {
         -- LSP серверы
         "phpactor",
         "pyright",
-        "tsserver",
+        "typescript-language-server",
         "biome", -- Замена eslint (на Rust)
         "marksman",
         "dockerls",
@@ -24,6 +24,7 @@ return {
         "lua_ls",
         "yamlls",     -- <-- ДОБАВЛЕНО (для YAML и Kubernetes)
         "helm-ls",    -- <-- ДОБАВЛЕНО (для Helm)
+         "roslyn",
 
         -- Форматтеры
         "stylua",       -- Lua (на Rust)
