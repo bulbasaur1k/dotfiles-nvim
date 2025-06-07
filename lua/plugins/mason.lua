@@ -22,6 +22,8 @@ return {
         "ansiblels",
         "rust_analyzer",
         "lua_ls",
+        "yamlls",     -- <-- ДОБАВЛЕНО (для YAML и Kubernetes)
+        "helm-ls",    -- <-- ДОБАВЛЕНО (для Helm)
 
         -- Форматтеры
         "stylua",       -- Lua (на Rust)
@@ -31,8 +33,9 @@ return {
         "rustfmt",      -- Rust (на Rust)
         "prettierd",    -- Универсальный (резервный)
         "php-cs-fixer", -- Только для PHP
-        "ru",
-        "en",
+        -- Линтеры для none-ls
+        "hadolint",   -- <-- ДОБАВЛЕНО (для Dockerfile)
+        "yamllint",   -- <-- ДОБАВЛЕНО (для YAML)
       },
     },
     config = function(_, opts)

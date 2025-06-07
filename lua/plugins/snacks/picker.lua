@@ -1,3 +1,4 @@
+-- plugins/snacks/picker.lua
 ---@type snacks.picker.Config
 local source_config = {
   hidden = true,

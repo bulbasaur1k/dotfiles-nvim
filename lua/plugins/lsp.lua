@@ -35,7 +35,7 @@ return {
       end
 
       -- Возможности LSP
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       local servers = {
         bashls = {},
@@ -69,9 +69,18 @@ return {
         yamlls = {
           settings = {
             yaml = {
-              schemaStore = { enable = false, url = "" },
-              schemas = require("schemastore").yaml.schemas(),
-              format = { enable = true }
+              schemaStore = { enable = true, url = "" }, -- Включите schemaStore для автообнаружения
+              schemas = vim.tbl_deep_extend("force", require("schemastore").yaml.schemas(), {
+                -- Указываем yamlls использовать схему Kubernetes для файлов, которые
+                -- содержат 'apiVersion' и 'kind', а также для файлов в директориях k8s.
+                ["https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/v1.27.0/all.json"] = "/*/*k8s*.yml",
+                ["kubernetes"] = { "**/templates/*.yaml", "**/templates/*.yml" }, -- Для Helm-чартов
+                ["https://json.schemastore.org/gitlab-ci.json"] = "*gitlab-ci*.yml", -- Для GitLab CI
+              }),
+              format = { enable = true },
+              validate = true,
+              completion = true,
+              hover = true,
             },
           },
         },
@@ -87,7 +96,7 @@ return {
             f:close()
             -- Check if "tailwindcss" is a dependency or devDependency
             return content:match('"dependencies"%s*:') and content:match('"tailwindcss"%s*:') or
-                content:match('"devDependencies"%s*:') and content:match('"tailwindcss"%s*:') and dir or nil
+                   content:match('"devDependencies"%s*:') and content:match('"tailwindcss"%s*:') and dir or nil
           end,
         },
         rust_analyzer = {},

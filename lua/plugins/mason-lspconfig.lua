@@ -14,6 +14,8 @@ return {
         "ansiblels",
         "rust_analyzer",
         "lua_ls",
+         "yamlls",
+        "helm-ls",
       },
       automatic_installation = true,
     },
