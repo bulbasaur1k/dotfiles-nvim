@@ -11,48 +11,16 @@ return {
     opts = {
       auto_install = true,
       ensure_installed = {
-        "bash",
-        "blade",
-        "css",
-        "dockerfile",
-        "fish",
-        "git_config",
-        "git_rebase",
-        "gitattributes",
-        "gitcommit",
-        "gitignore",
-        "html",
-        "javascript",
-        "json",
-        "lua",
-        "make",
-        "markdown",
-        "markdown_inline",
-        "nix",
-        "php",
-        "phpdoc",
-        "regex",
-        "scss",
-        "sql",
-        "tsx",
-        "typescript",
-        "vim",
-        "vimdoc",
-        "vue",
-        "yaml",
-        "helm",
-        "go",
-        "csharp",
+        "bash", "blade", "css", "dockerfile", "fish", "git_config", "git_rebase", "gitattributes", "gitcommit",
+        "gitignore", "html", "javascript", "json", "lua", "make", "markdown", "markdown_inline", "nix", "php", "phpdoc",
+        "regex", "scss", "sql", "tsx", "typescript", "vim", "vimdoc", "vue", "yaml", "helm", "c_sharp"
       },
       highlight = { enable = true },
       indent = { enable = true },
     },
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
-
-      vim.filetype.add({
-        pattern = { ["%.env%.[%w_.-]+"] = "sh" },
-      })
+      vim.filetype.add({ pattern = { ["%.env%.[%w_.-]+"] = "sh" } })
     end,
   },
   {

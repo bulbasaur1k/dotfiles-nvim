@@ -1,46 +1,53 @@
 -- plugins/mason.lua
 return {
-  {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    opts = {
-      ui = {
-        icons = {
-          package_installed = "✓",
-          package_pending = "➜",
-          package_uninstalled = "✗",
-        },
-      },
-      ensure_installed = {
-        -- LSP серверы
-        "phpactor",
-        "pyright",
-        "typescript-language-server",
-        "biome", -- Замена eslint (на Rust)
-        "marksman",
-        "dockerls",
-        "ansiblels",
-        "rust_analyzer",
-        "lua_ls",
-        "yamlls",     -- <-- ДОБАВЛЕНО (для YAML и Kubernetes)
-        "helm-ls",    -- <-- ДОБАВЛЕНО (для Helm)
-         "roslyn",
+	{
+		"williamboman/mason.nvim",
+		cmd = "Mason",
+		opts = {
+			ui = {
+				icons = {
+					package_installed = "✓",
+					package_pending = "➜",
+					package_uninstalled = "✗",
+				},
+			},
+			ensure_installed = {
+				-- LSP Servers
+				"phpactor",
+				"pyright",
+				"typescript-language-server", -- The package for ts_ls
+				"biome",
+				"marksman",
+				"dockerls",
+				"ansiblels",
+				"rust_analyzer",
+				"roslyn-unstable",
+				"lua_ls",
+				"yaml-language-server", -- The package for yamlls
 
-        -- Форматтеры
-        "stylua",       -- Lua (на Rust)
-        "ruff",         -- Python (на Rust)
-        "taplo",        -- TOML (на Rust)
-        "biome",        -- JS/TS (на Rust)
-        "rustfmt",      -- Rust (на Rust)
-        "prettierd",    -- Универсальный (резервный)
-        "php-cs-fixer", -- Только для PHP
-        -- Линтеры для none-ls
-        "hadolint",   -- <-- ДОБАВЛЕНО (для Dockerfile)
-        "yamllint",   -- <-- ДОБАВЛЕНО (для YAML)
-      },
-    },
-    config = function(_, opts)
-      require("mason").setup(opts)
-    end,
-  },
+				-- Formatters for conform.nvim
+				"stylua", -- For Lua
+				"ruff", -- For Python (includes ruff_format)
+				"black", -- For Python (alternative)
+				"taplo", -- For TOML
+				"shfmt", -- For Shell scripts
+				"rustfmt", -- For Rust
+				"prettierd", -- For web languages (JS, CSS, HTML, Markdown)
+				"php-cs-fixer", -- For PHP
+				"alejandra", -- For Nix
+
+				-- Linters for nvim-lint
+				"shellcheck", -- For Shell scripts
+				"hadolint", -- For Dockerfile
+				"yamllint", -- For YAML
+			},
+			registries = {
+				"github:mason-org/mason-registry",
+				"github:Crashdummyy/mason-registry",
+			},
+		},
+		config = function(_, opts)
+			require("mason").setup(opts)
+		end,
+	},
 }
