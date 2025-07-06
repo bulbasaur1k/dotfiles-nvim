@@ -2,67 +2,19 @@
 return {
 	{
 		"epwalsh/obsidian.nvim",
-		ft = "markdown",
+		version = "*",
+		lazy = true,
+		event = {
+			"BufReadPre " .. vim.fn.expand("~") .. "/obsidian/docs/work/*.md",
+			"BufNewFile " .. vim.fn.expand("~") .. "/obsidian/docs/work/*.md",
+			"BufReadPre " .. vim.fn.expand("~") .. "/obsidian/docs/personal/*.md",
+			"BufNewFile " .. vim.fn.expand("~") .. "/obsidian/docs/personal/*.md",
+		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"MeanderingProgrammer/render-markdown.nvim",
-		},
-		opts = {
-			workspaces = {
-				{
-					name = "work",
-					path = vim.fn.expand("~/obsidian/docs/work"),
-				},
-				{
-					name = "personal",
-					path = vim.fn.expand("~/obsidian/docs/personal"),
-				},
-				{
-					name = "no-vault",
-					path = function()
-						return vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-					end,
-					strict = true,
-					overrides = {
-						notes_subdir = vim.NIL,
-						new_notes_location = "current_dir",
-						disable_frontmatter = true,
-						templates = { subdir = vim.NIL },
-					},
-				},
-			},
-			disable_frontmatter = false,
-			note_id_func = function(title)
-				return title and title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower() or tostring(os.time())
-			end,
-			note_frontmatter_func = function(note)
-				return { id = note.id, aliases = note.aliases, tags = note.tags }
-			end,
-			templates = {
-				subdir = "templates",
-				date_format = "%Y-%m-%d-%a",
-				time_format = "%H:%M",
-			},
-			open_notes_in = "current",
-			picker = {
-				name = "snacks",
-				mappings = {
-					new = "<C-x>",
-					insert_link = "<C-l>",
-				},
-			},
-			completion = {
-				nvim_cmp = false,
-				min_chars = 2,
-			},
-			ui = {
-				enable = true,
-				update_debounce = 200,
-				checkboxes = {
-					[" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-					["x"] = { char = "", hl_group = "ObsidianDone" },
-				},
-			},
+			"MunifTanjim/nui.nvim",
+			"folke/noice.nvim",
 		},
 		keys = {
 			{ "<leader>on", "<cmd>ObsidianNew<cr>", desc = "[O]bsidian [N]ew" },
@@ -90,8 +42,31 @@ return {
 			},
 		},
 		config = function(_, opts)
-			require("obsidian").setup(opts)
-			-- ваша интеграция render-markdown.nvim и snacks остаётся без изменений
+			-- disable telescope integration, use native vim.ui.select via Noice
+			require("noice").setup({})
+			require("obsidian").setup(vim.tbl_deep_extend("force", {
+				use_advanced_ui = false,
+				workspaces = {
+					{ name = "work", path = vim.fn.expand("~/obsidian/docs/work") },
+					{ name = "personal", path = vim.fn.expand("~/obsidian/docs/personal") },
+					{
+						name = "no-vault",
+						path = function()
+							return vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+						end,
+						strict = true,
+						overrides = {
+							notes_subdir = vim.NIL,
+							new_notes_location = "current_dir",
+							disable_frontmatter = true,
+							templates = { folder = vim.NIL },
+						},
+					},
+				},
+				disable_frontmatter = false,
+				templates = { subdir = "templates", date_format = "%Y-%m-%d-%a", time_format = "%H:%M" },
+				open_notes_in = "current",
+			}, opts))
 		end,
 	},
 }
