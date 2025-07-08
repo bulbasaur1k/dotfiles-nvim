@@ -1,4 +1,4 @@
--- plugins/lsp.lua
+-- FILE: lua/plugins/lsp.lua
 return {
 	{
 		"neovim/nvim-lspconfig",
@@ -13,23 +13,42 @@ return {
 				float = { border = require("util.ui").border },
 				signs = {
 					text = {
-						[vim.diagnostic.severity.ERROR] = " ",
-						[vim.diagnostic.severity.WARN] = " ",
-						[vim.diagnostic.severity.HINT] = " ",
-						[vim.diagnostic.severity.INFO] = " ",
+						[vim.diagnostic.severity.ERROR] = " ",
+						[vim.diagnostic.severity.WARN] = " ",
+						[vim.diagnostic.severity.HINT] = " ",
+						[vim.diagnostic.severity.INFO] = " ",
 					},
 				},
 			})
 
-			local on_attach = function(_, buf)
+			local on_attach = function(client, buf)
 				local map = function(keys, func, desc)
 					vim.keymap.set("n", keys, func, { buffer = buf, desc = desc })
 				end
-				map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-				map("<leader>cr", vim.lsp.buf.rename, "Rename variable")
-				map("gd", vim.lsp.buf.definition, "Go to definition")
-				map("K", vim.lsp.buf.hover, "Hover")
-				map("gr", vim.lsp.buf.references, "References")
+
+				-- Основные LSP биндинги
+				map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+				map("gi", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+				map("go", vim.lsp.buf.type_definition, "[G]oto Type Definition")
+				map("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
+				map("gs", vim.lsp.buf.signature_help, "[G]et [S]ignature Help")
+				map("K", vim.lsp.buf.hover, "Hover Documentation")
+				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+				map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
+				map("<leader>cf", vim.lsp.buf.format, "[C]ode [F]ormat")
+
+				-- Workspace
+				map("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
+				map("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
+				map("<leader>wl", function()
+					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+				end, "[W]orkspace [L]ist Folders")
+
+				-- Enable inlay hints if supported
+				if client.server_capabilities.inlayHintProvider then
+					vim.lsp.inlay_hint.enable(true, { bufnr = buf })
+				end
 			end
 
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -48,25 +67,49 @@ return {
 						},
 					},
 				},
-				phpactor = {
-					filetypes = { "php" },
+				pyright = {
 					settings = {
-						phpactor = {
-							languageServer = {
-								diagnosticProvider = true,
-								completionEnabled = true,
-								formattingEnabled = false,
+						python = {
+							analysis = {
+								autoSearchPaths = true,
+								diagnosticMode = "workspace",
+								useLibraryCodeForTypes = true,
 							},
 						},
 					},
 				},
-				pyright = {},
 				ts_ls = {
 					filetypes = {
 						"javascript",
 						"javascriptreact",
 						"typescript",
 						"typescriptreact",
+					},
+					settings = {
+						typescript = {
+							inlayHints = {
+								includeInlayParameterNameHints = "all",
+								includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+								includeInlayFunctionParameterTypeHints = true,
+								includeInlayVariableTypeHints = true,
+								includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+								includeInlayPropertyDeclarationTypeHints = true,
+								includeInlayFunctionLikeReturnTypeHints = true,
+								includeInlayEnumMemberValueHints = true,
+							},
+						},
+						javascript = {
+							inlayHints = {
+								includeInlayParameterNameHints = "all",
+								includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+								includeInlayFunctionParameterTypeHints = true,
+								includeInlayVariableTypeHints = true,
+								includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+								includeInlayPropertyDeclarationTypeHints = true,
+								includeInlayFunctionLikeReturnTypeHints = true,
+								includeInlayEnumMemberValueHints = true,
+							},
+						},
 					},
 				},
 				biome = {
@@ -75,6 +118,13 @@ return {
 						"javascriptreact",
 						"typescript",
 						"typescriptreact",
+						"json",
+						"jsonc",
+					},
+				},
+				eslint = {
+					settings = {
+						workingDirectory = { mode = "auto" },
 					},
 				},
 				yamlls = {
@@ -91,7 +141,27 @@ return {
 					},
 				},
 				tailwindcss = {
-					filetypes_exclude = { "markdown", "php" },
+					filetypes = {
+						"html",
+						"css",
+						"scss",
+						"javascript",
+						"javascriptreact",
+						"typescript",
+						"typescriptreact",
+						"vue",
+					},
+					settings = {
+						tailwindCSS = {
+							experimental = {
+								classRegex = {
+									{ "clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+									{ "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+									{ "cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+								},
+							},
+						},
+					},
 				},
 				rust_analyzer = {},
 				lua_ls = {

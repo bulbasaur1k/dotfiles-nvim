@@ -1,4 +1,4 @@
--- config/keymaps.lua
+-- FILE: lua/config/keymaps.lua
 local set = vim.keymap.set
 
 -- Keep previous clipboard if pasting in visual
@@ -42,8 +42,11 @@ set("x", "<leader>vx", ":lua<cr>", { desc = "Execute lua code" })
 
 -- Obsidian
 set("n", "<leader>np", ":PromptNew<CR>", { desc = "New Prompt" })
-
 set("n", "<leader>nf", ":ObsidianQuickSwitch path:prompts<CR>", { desc = "Find Prompts" })
-
--- Поиск по всем заметкам
 set("n", "<leader>no", ":ObsidianSearch<CR>", { desc = "Search All Notes" })
+
+-- Global LSP mappings
+set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
+set("n", "<leader>lr", "<cmd>LspRestart<cr>", { desc = "LSP Restart" })
+set("n", "<leader>ls", "<cmd>LspStart<cr>", { desc = "LSP Start" })
+set("n", "<leader>lS", "<cmd>LspStop<cr>", { desc = "LSP Stop" })

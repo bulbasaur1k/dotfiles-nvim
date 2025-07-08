@@ -1,4 +1,4 @@
--- plugins/mason.lua
+-- FILE: lua/plugins/mason.lua
 return {
 	{
 		"williamboman/mason.nvim",
@@ -13,37 +13,47 @@ return {
 			},
 			ensure_installed = {
 				-- LSP Servers
-				"phpactor",
 				"pyright",
-				"typescript-language-server", -- The package for ts_ls
+				"typescript-language-server",
 				"biome",
 				"marksman",
-				"dockerls",
-				"ansiblels",
-				"rust_analyzer",
-				"roslyn-unstable",
-				"lua_ls",
-				"yaml-language-server", -- The package for yamlls
+				"dockerfile-language-server",
+				"ansible-language-server",
+				"rust-analyzer",
+				"roslyn",
+				"lua-language-server",
+				"yaml-language-server",
+				"eslint-lsp",
+				"tailwindcss-language-server",
+				"html-lsp",
+				"css-lsp",
+				"json-lsp",
 
 				-- Formatters for conform.nvim
-				"stylua", -- For Lua
-				"ruff", -- For Python (includes ruff_format)
-				"black", -- For Python (alternative)
-				"taplo", -- For TOML
-				"shfmt", -- For Shell scripts
-				"rustfmt", -- For Rust
-				"prettierd", -- For web languages (JS, CSS, HTML, Markdown)
-				"php-cs-fixer", -- For PHP
-				"alejandra", -- For Nix
+				"stylua",
+				"ruff",
+				"black",
+				"taplo",
+				"shfmt",
+				"rustfmt",
+				"prettierd",
+				"prettier",
+				"alejandra",
+				"csharpier",
 
 				-- Linters for nvim-lint
-				"shellcheck", -- For Shell scripts
-				"hadolint", -- For Dockerfile
-				"yamllint", -- For YAML
+				"shellcheck",
+				"hadolint",
+				"yamllint",
+				"eslint_d",
+
+				-- DAP
+				"codelldb",
+				"netcoredbg",
+				"js-debug-adapter",
 			},
 			registries = {
 				"github:mason-org/mason-registry",
-				"github:Crashdummyy/mason-registry",
 			},
 		},
 		config = function(_, opts)
