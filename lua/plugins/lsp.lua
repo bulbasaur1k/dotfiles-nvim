@@ -8,25 +8,43 @@ return {
 		},
 		event = { "BufReadPost", "BufNewFile" },
 		config = function()
+			-- Define icons - using dots with different colors
+			local icons = {
+				Error = "●",
+				Warn = "●",
+				Hint = "●",
+				Info = "●",
+			}
+
 			vim.diagnostic.config({
 				virtual_lines = true,
 				float = { border = require("util.ui").border },
 				signs = {
 					text = {
-						[vim.diagnostic.severity.ERROR] = " ",
-						[vim.diagnostic.severity.WARN] = " ",
-						[vim.diagnostic.severity.HINT] = " ",
-						[vim.diagnostic.severity.INFO] = " ",
+						[vim.diagnostic.severity.ERROR] = icons.Error,
+						[vim.diagnostic.severity.WARN] = icons.Warn,
+						[vim.diagnostic.severity.HINT] = icons.Hint,
+						[vim.diagnostic.severity.INFO] = icons.Info,
 					},
 				},
 			})
+
+			-- Safely enable inlay hints with error handling
+			local function safe_enable_inlay_hints(bufnr)
+				local ok, err = pcall(function()
+					vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+				end)
+				if not ok then
+					vim.notify("Failed to enable inlay hints: " .. tostring(err), vim.log.levels.WARN)
+				end
+			end
 
 			local on_attach = function(client, buf)
 				local map = function(keys, func, desc)
 					vim.keymap.set("n", keys, func, { buffer = buf, desc = desc })
 				end
 
-				-- Основные LSP биндинги
+				-- Basic LSP bindings
 				map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 				map("gi", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
@@ -45,9 +63,17 @@ return {
 					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 				end, "[W]orkspace [L]ist Folders")
 
-				-- Enable inlay hints if supported
+				-- Toggle inlay hints manually
+				map("<leader>th", function()
+					vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buf }), { bufnr = buf })
+				end, "[T]oggle Inlay [H]ints")
+
+				-- Enable inlay hints if supported (with error handling)
 				if client.server_capabilities.inlayHintProvider then
-					vim.lsp.inlay_hint.enable(true, { bufnr = buf })
+					-- Delay enabling inlay hints to avoid race conditions
+					vim.defer_fn(function()
+						safe_enable_inlay_hints(buf)
+					end, 100)
 				end
 			end
 
@@ -163,13 +189,18 @@ return {
 						},
 					},
 				},
-				rust_analyzer = {},
+				rust_analyzer = {
+					-- Skip setup here as rustaceanvim handles it
+					-- This prevents conflict warning
+					setup = function() end,
+				},
 				lua_ls = {
 					settings = {
 						Lua = {
 							workspace = { checkThirdParty = false },
 							completion = { callSnippet = "Replace" },
 							diagnostics = { globals = { "vim" } },
+							hint = { enable = true }, -- Enable inlay hints for Lua
 						},
 					},
 				},
@@ -178,12 +209,12 @@ return {
 						if not fname then
 							return nil
 						end
-						-- отключаем marksman внутри ~/obsidian/
+						-- Disable marksman inside ~/obsidian/
 						local obs_root = vim.fn.expand("~/obsidian/"):gsub("/$", "")
 						if fname:sub(1, #obs_root) == obs_root then
 							return nil
 						end
-						-- иначе включаем, если есть .git или .marksman.toml
+						-- Enable if .git or .marksman.toml exists
 						return require("lspconfig.util").root_pattern(".git", ".marksman.toml")(fname)
 					end,
 				},
@@ -196,6 +227,11 @@ return {
 				}, cfg or {})
 				require("lspconfig")[name].setup(opts)
 			end
+
+			-- Global keybind to toggle inlay hints for all buffers
+			vim.keymap.set("n", "<leader>tH", function()
+				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+			end, { desc = "[T]oggle Inlay [H]ints (global)" })
 		end,
 	},
 }

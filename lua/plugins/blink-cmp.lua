@@ -6,7 +6,6 @@ return {
 			"echasnovski/mini.icons",
 			"folke/lazydev.nvim",
 			"rafamadriz/friendly-snippets",
-			"saecki/crates.nvim",
 		},
 		version = "v1.*",
 		event = { "CmdlineEnter", "InsertEnter" },
@@ -28,17 +27,12 @@ return {
 			},
 			appearance = { nerd_font_variant = "normal" },
 			sources = {
-				default = { "lazydev", "lsp", "path", "snippets", "buffer", "crates" },
+				default = { "lazydev", "lsp", "path", "snippets", "buffer" },
 				providers = {
 					lazydev = {
 						name = "LazyDev",
 						module = "lazydev.integrations.blink",
 						score_offset = 100,
-					},
-					crates = {
-						name = "crates",
-						module = "blink.compat.source",
-						score_offset = 90,
 					},
 				},
 			},
@@ -77,18 +71,5 @@ return {
 				window = { border = require("util.ui").border },
 			},
 		},
-		config = function(_, opts)
-			-- Интеграция с crates.nvim
-			local crates = require("crates")
-			crates.setup({
-				completion = {
-					crates = {
-						enabled = true,
-					},
-				},
-			})
-
-			require("blink.cmp").setup(opts)
-		end,
 	},
 }

@@ -1,4 +1,5 @@
 -- FILE: lua/config/keymaps.lua
+-- config/keymaps.lua
 local set = vim.keymap.set
 
 -- Keep previous clipboard if pasting in visual

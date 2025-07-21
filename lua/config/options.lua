@@ -3,6 +3,7 @@ local opt = vim.opt
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.g.inlay_hints_enabled = false
 
 opt.autowrite = true -- Enable auto write
 opt.breakindent = true

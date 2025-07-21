@@ -1,4 +1,5 @@
 -- FILE: lua/plugins/roslyn.lua
+-- plugins/roslyn.lua
 return {
 	{
 		"seblj/roslyn.nvim",

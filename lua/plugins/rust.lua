@@ -1,4 +1,5 @@
 -- FILE: lua/plugins/rust.lua
+-- plugins/rust.lua
 return {
 	-- Основной плагин для Rust
 	{
