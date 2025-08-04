@@ -17,7 +17,8 @@ return {
 			}
 
 			vim.diagnostic.config({
-				virtual_lines = true,
+				virtual_lines = false, -- Отключаем автоматический показ
+				virtual_text = false, -- Отключаем текст справа от строки
 				float = { border = require("util.ui").border },
 				signs = {
 					text = {
@@ -55,6 +56,12 @@ return {
 				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 				map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
 				map("<leader>cf", vim.lsp.buf.format, "[C]ode [F]ormat")
+
+				-- Diagnostics bindings
+				map("<leader>e", vim.diagnostic.open_float, "Show diagnostics")
+				map("ge", vim.diagnostic.open_float, "Show line diagnostics")
+				map("]d", vim.diagnostic.goto_next, "Go to next diagnostic")
+				map("[d", vim.diagnostic.goto_prev, "Go to previous diagnostic")
 
 				-- Workspace
 				map("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
