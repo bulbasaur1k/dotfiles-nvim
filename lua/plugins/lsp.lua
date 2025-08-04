@@ -58,8 +58,8 @@ return {
 				map("<leader>cf", vim.lsp.buf.format, "[C]ode [F]ormat")
 
 				-- Diagnostics bindings
-				map("<leader>e", vim.diagnostic.open_float, "Show diagnostics")
-				map("ge", vim.diagnostic.open_float, "Show line diagnostics")
+				map("<leader>cd", vim.diagnostic.open_float, "[C]ode [D]iagnostics")
+				map("gl", vim.diagnostic.open_float, "Show [L]ine diagnostics")
 				map("]d", vim.diagnostic.goto_next, "Go to next diagnostic")
 				map("[d", vim.diagnostic.goto_prev, "Go to previous diagnostic")
 
